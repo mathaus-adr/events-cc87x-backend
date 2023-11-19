@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::table('events', function (Blueprint $table) {
             $table->date('processed_date')->nullable()->index();
-        }git;
+        });
     }
 
     /**
