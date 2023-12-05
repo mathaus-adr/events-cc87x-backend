@@ -12,7 +12,7 @@ class BillController extends Controller
      */
     public function index()
     {
-        //
+        return Bill::where('user_id', auth()->user()->id)->get();
     }
 
     /**
@@ -30,9 +30,10 @@ class BillController extends Controller
     {
         $validated = $request->validate([
             'name' => 'string|required',
-            'price' => 'numeric|price'
+            'price' => 'numeric|required'
         ]);
         $bill = new Bill();
+        $bill->user_id = auth()->user()->id;
         $bill->fill($validated);
         $bill->save();
         return $bill;

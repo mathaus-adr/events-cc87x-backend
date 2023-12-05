@@ -13,7 +13,7 @@ class PersonController extends Controller
      */
     public function index(): Collection
     {
-        return Person::all();
+        return Person::where('user_id', auth()->user()->id)->get();
     }
 
     /**
@@ -34,6 +34,7 @@ class PersonController extends Controller
         ]);
 
         $person = new Person;
+        $person->user_id = auth()->user()->id;
         $person->fill($validated);
         $person->save();
 

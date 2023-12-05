@@ -24,8 +24,12 @@ class EventSyncService
         $event->user()->associate($user);
         $event->save();
 
-        $event->bills()->sync($data['bills']);
-        $event->people()->sync($data['people']);
+        if (array_key_exists('bills', $data)) {
+            $event->bills()->sync($data['bills']);
+        }
+        if (array_key_exists('people', $data)) {
+            $event->people()->sync($data['people']);
+        }
         $event->refresh();
         return $event;
     }

@@ -31,7 +31,7 @@ class EventController extends Controller
         ]);
         /** @var EventSyncService $service * */
         $service = app(EventSyncService::class);
-        /** @var User $user **/
+        /** @var User $user * */
         $user = auth()?->user();
         $event = $service->sync($validated, $user);
 
@@ -46,7 +46,9 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        //
+        $event->load('bills');
+        $event->load('people');
+        return $event;
     }
 
     /**
@@ -62,7 +64,19 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        //
+        $validated = $request->validate([
+            'people' => 'array|nullable',
+            'people.*' => 'integer',
+            'bills' => 'array|nullable',
+            'bills.*' => 'integer'
+        ]);
+        $event->bills()->sync($validated['bills']);
+        $event->people()->sync($validated['people']);
+        $event->update();
+        $event->load('bills');
+        $event->load('people');
+        $event->refresh();
+        return response()->json($event);
     }
 
     /**
